@@ -34,7 +34,6 @@ def hinge_loss_single(feature_vector, label, theta, theta_0):
     given data point and parameters.
     """
     # Your code here
-    # print (label, theta, feature_vector, theta_0)
     agreement = label * (np.dot(theta, feature_vector) + theta_0)
     result = max(0, (1 - agreement))
     return result
@@ -119,11 +118,15 @@ def perceptron(feature_matrix, labels, T):
     the feature matrix.
     """
     # Your code here
+    theta = [0,0]
+    theta_0 = 0
     for t in range(T):
         for i in get_order(feature_matrix.shape[0]):
-            # Your code here
+            if (labels[i] * (np.dot(feature_matrix[i], theta) + theta_0) <= 0):
+                theta, theta_0 = perceptron_single_step_update(feature_matrix[i], labels[i], theta, theta_0)
             pass
-    raise NotImplementedError
+    
+    return (theta, theta_0)
 
 
 def average_perceptron(feature_matrix, labels, T):
@@ -156,7 +159,23 @@ def average_perceptron(feature_matrix, labels, T):
     find a sum and divide.
     """
     # Your code here
-    raise NotImplementedError
+    num = feature_matrix.shape[0]
+    theta = np.zeros(feature_matrix.shape[1])
+    theta_0 = 0
+    total_theta = np.zeros(feature_matrix.shape[1])
+    total_theta_0 = 0
+    for t in range(T):
+        for i in get_order(feature_matrix.shape[0]):
+            if (labels[i] * (np.dot(feature_matrix[i], theta) + theta_0) <= 0):
+                theta, theta_0 = perceptron_single_step_update(feature_matrix[i], labels[i], theta, theta_0)
+            total_theta = total_theta + theta
+            total_theta_0 = total_theta_0 + theta_0
+
+    average_theta = total_theta / (feature_matrix.shape[0] * T)
+    average_theta_0 = total_theta_0 / (feature_matrix.shape[0] * T)
+
+    return (average_theta, average_theta_0)
+        
 
 
 def pegasos_single_step_update(
