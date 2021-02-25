@@ -209,7 +209,7 @@ def pegasos_single_step_update(
         theta_0 = current_theta_0 + eta * label
     else:
         theta = (1- eta*L)*current_theta
-        theta_0 = current_theta_0 + eta * label
+        theta_0 = current_theta_0
 
     return (theta, theta_0)
         
@@ -249,15 +249,9 @@ def pegasos(feature_matrix, labels, T, L):
     updates = 1
     for t in range(T):
         for i in get_order(feature_matrix.shape[0]):
-            theta, theta_0 = pegasos_single_step_update(feature_matrix[i], labels[i], L, 1/np.sqrt(updates), theta, theta_0)
+            eta = 1 / np.sqrt(updates)
+            theta, theta_0 = pegasos_single_step_update(feature_matrix[i], labels[i], L, eta, theta, theta_0)
             updates += 1
-            # if (labels[i] * (np.dot(theta, feature_matrix[i] + theta_0))) < 1:
-            #     theta, theta_0 = pegasos_single_step_update(feature_matrix[i], labels[i], L, 1/np.sqrt(updates), theta, theta_0)
-            #     updates += 1
-            # elif (labels[i] * (np.dot(theta, feature_matrix[i] + theta_0))) >= 1:
-            #     theta, theta_0 = pegasos_single_step_update(feature_matrix[i], labels[i], L, 1/np.sqrt(updates), theta, theta_0)
-            #     updates += 1
-    
     return (theta, theta_0)
 
 # Part II
