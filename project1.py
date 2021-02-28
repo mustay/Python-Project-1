@@ -130,6 +130,7 @@ def perceptron(feature_matrix, labels, T):
     return (theta, theta_0)
 
 
+
 def average_perceptron(feature_matrix, labels, T):
     """
     Runs the average perceptron algorithm on a given set of data. Runs T
@@ -277,10 +278,10 @@ def classify(feature_matrix, theta, theta_0):
     # Your code here
     results = np.zeros(feature_matrix.shape[0])
     for i in range(feature_matrix.shape[0]):
-        if ((np.dot(theta, feature_matrix[i]) + theta_0) < 1):
-            results[i] = -1
-        else:
+        if ((np.dot(theta, feature_matrix[i]) + theta_0) > 0):
             results[i] = 1
+        else:
+            results[i] = -1
     
     return results
 
