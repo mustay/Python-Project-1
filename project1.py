@@ -86,10 +86,11 @@ def perceptron_single_step_update(
     real valued number with the value of theta_0 after the current updated has
     completed.
     """
-    # Your code here
-    theta = current_theta + label * feature_vector
-    theta_0 = current_theta_0 + label
-    return (theta, theta_0)
+    if (label * (np.dot(current_theta, feature_vector) + current_theta_0)) <= (0.000001):
+        current_theta = current_theta + np.dot(label, feature_vector)
+        current_theta_0 = current_theta_0 + label
+    return (current_theta, current_theta_0)
+
 
 
 def perceptron(feature_matrix, labels, T):
@@ -118,11 +119,11 @@ def perceptron(feature_matrix, labels, T):
     the feature matrix.
     """
     # Your code here
-    theta = [0,0]
+    theta = np.zeros([feature_matrix.shape[1],])
     theta_0 = 0
     for t in range(T):
         for i in get_order(feature_matrix.shape[0]):
-            if (labels[i] * (np.dot(feature_matrix[i], theta) + theta_0) <= 0):
+            if (labels[i] * ((np.dot(feature_matrix[i], theta) + theta_0)) <= 0):
                 theta, theta_0 = perceptron_single_step_update(feature_matrix[i], labels[i], theta, theta_0)
             pass
     
@@ -204,11 +205,11 @@ def pegasos_single_step_update(
     real valued number with the value of theta_0 after the current updated has
     completed.
     """
-    if (label * (np.dot(current_theta, feature_vector + current_theta_0))) <= 1:
-        theta = ((1 - eta*L)) * current_theta + eta * label * feature_vector
+    if (label * (np.dot(current_theta, feature_vector) + current_theta_0)) <= 1:
+        theta = (1 - (eta*L)) * current_theta + eta * label * feature_vector
         theta_0 = current_theta_0 + eta * label
     else:
-        theta = (1- eta*L)*current_theta
+        theta = (1- (eta*L)) * current_theta
         theta_0 = current_theta_0
 
     return (theta, theta_0)
@@ -249,8 +250,7 @@ def pegasos(feature_matrix, labels, T, L):
     updates = 1
     for t in range(T):
         for i in get_order(feature_matrix.shape[0]):
-            eta = 1 / np.sqrt(updates)
-            theta, theta_0 = pegasos_single_step_update(feature_matrix[i], labels[i], L, eta, theta, theta_0)
+            theta, theta_0 = pegasos_single_step_update(feature_matrix[i], labels[i], L, 1 / np.sqrt(updates), theta, theta_0)
             updates += 1
     return (theta, theta_0)
 
@@ -275,7 +275,14 @@ def classify(feature_matrix, theta, theta_0):
     be considered a positive classification.
     """
     # Your code here
-    raise NotImplementedError
+    results = np.zeros(feature_matrix.shape[0])
+    for i in range(feature_matrix.shape[0]):
+        if ((np.dot(theta, feature_matrix[i]) + theta_0) < 1):
+            results[i] = -1
+        else:
+            results[i] = 1
+    
+    return results
 
 
 def classifier_accuracy(
@@ -311,8 +318,13 @@ def classifier_accuracy(
     accuracy of the trained classifier on the validation data.
     """
     # Your code here
-    raise NotImplementedError
+    theta, theta_0 = classifier(train_feature_matrix, train_labels, **kwargs)
+    train_pred = classify(train_feature_matrix, theta, theta_0)
+    validate_pred = classify(val_feature_matrix, theta, theta_0)
+    accuracy_train = accuracy(train_pred, train_labels)
+    accuracy_val = accuracy(validate_pred, val_labels)
 
+    return (accuracy_train, accuracy_val)
 
 def extract_words(input_string):
     """

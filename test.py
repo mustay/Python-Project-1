@@ -137,6 +137,18 @@ def check_hinge_loss_full():
 def check_perceptron_single_update():
     ex_name = "Perceptron single update"
 
+    feature_vector = np.array([ 0.12196021,  0.18797261,  0.03664945, -0.082683,    0.48242147, -0.47433345,
+    0.39924631, -0.25099417,  0.27978137,  0.19031368])
+    label, theta, theta_0 = -1, np.array([ 0.30282526,  0.13382115, -0.02577578,  0.44256515, -0.34757201, -0.06762016,
+  0.02569061,  0.1273863,   0.31450975,  0.23654328]), 0.11956761130139293
+
+    exp_res = (np.array([0.1808650, -0.0541515, -0.0624252, 0.5252482, -0.8299935, 0.4067133, -0.3735557, 0.3783805, 0.0347284, 0.0462296]), -0.8804324)
+
+    if check_tuple(
+            ex_name, p1.perceptron_single_step_update,
+            exp_res, feature_vector, label, theta, theta_0):
+        return
+
     feature_vector = np.array([1, 2])
     label, theta, theta_0 = 1, np.array([-1, 1]), -1.5
     exp_res = (np.array([0, 3]), -0.5)
@@ -243,10 +255,31 @@ def check_average_perceptron():
 def check_pegasos_single_update():
     ex_name = "Pegasos single update"
 
+    feature_vector = np.array([-0.3658804,  -0.18944147, -0.2644377,  -0.13034805, -0.11180312, -0.33376283,
+ -0.03049197, -0.34904553,  0.24048289, -0.46673994])
+    label, theta, theta_0 = -1, np.array([-0.33158394,  0.38327877,  0.37217452, -0.41027344, -0.25177124, -0.12045054,
+  0.47998894, -0.08963534, -0.46779673, -0.47115511]), -1.49298634788016
+
+    L=  0.03149018128778169
+    eta= 0.3778475123297551
+
+    exp_res = (np.array([-0.1893916, 0.4502983, 0.4676633, -0.3561401, -0.2065310, 0.0070941, 0.4857991, 0.0433172, -0.5530965, -0.2891925]), -1.8708339)
+
+    if check_tuple(
+            ex_name, p1.pegasos_single_step_update,
+            exp_res,
+            feature_vector, label, L, eta, theta, theta_0):
+        return
+
+
+
+
+
     feature_vector = np.array([1, 2])
     label, theta, theta_0 = 1, np.array([-1, 1]), -1.5
     L = 0.2
     eta = 0.1
+
     exp_res = (np.array([-0.88, 1.18]), -1.4)
     if check_tuple(
             ex_name, p1.pegasos_single_step_update,
