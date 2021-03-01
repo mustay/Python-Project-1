@@ -105,9 +105,8 @@ data = (train_bow_features, train_labels, val_bow_features, val_labels)
 # test_bow_features and test_labels.
 #-------------------------------------------------------------------------------
 
-# Your code here
-# accuracy = p1.classifier_accuracy(p1.pegasos, train_bow_features,test_bow_features,train_labels,test_labels,T=25,L=0.01)
-# print (accuracy)
+accuracy = p1.classifier_accuracy(p1.pegasos, train_bow_features,test_bow_features,train_labels,test_labels,T=25,L=0.01)
+print (accuracy)
 
 #-------------------------------------------------------------------------------
 # Assign to best_theta, the weights (and not the bias!) learned by your most
